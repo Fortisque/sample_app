@@ -31,6 +31,8 @@ group :test do
   # gem 'rb-fchange', '0.0.6'
   # gem 'rb-notifu', '0.0.4'
   # gem 'win32console', '1.3.2'
+  gem 'cucumber-rails', '1.2.1', :require => false
+  gem 'database_cleaner', '0.7.0'
 end
 
 group :assets do
