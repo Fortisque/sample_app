@@ -42,6 +42,7 @@ describe "User pages" do
         end
 
         it { should have_link('delete', href: user_path(User.first)) }
+        it { should_not have_link('delete', href: user_path(admin)) }
         it "should be able to delete another user" do
           expect { click_link('delete') }.to change(User, :count).by(-1)
         end
@@ -83,7 +84,7 @@ describe "User pages" do
         fill_in "Name",         with: "Example User"
         fill_in "Email",        with: "user@example.com"
         fill_in "Password",     with: "foobar"
-        fill_in "Confirmation", with: "foobar"
+        fill_in "Confirm Password", with: "foobar"
       end
 
       describe "after saving the user" do
@@ -130,6 +131,23 @@ describe "User pages" do
       it { should have_link('Sign out', href: signout_path) }
       specify { user.reload.name.should  == new_name }
       specify { user.reload.email.should == new_email }
+    end
+  end
+
+  describe "profile page" do
+    let(:user) { FactoryGirl.create(:user) }
+    let!(:m1) { FactoryGirl.create(:micropost, user: user, content: "Foo") }
+    let!(:m2) { FactoryGirl.create(:micropost, user: user, content: "Bar") }
+
+    before { visit user_path(user) }
+
+    it { should have_content(user.name) }
+    it { should have_title(user.name) }
+
+    describe "microposts" do
+      it { should have_content(m1.content) }
+      it { should have_content(m2.content) }
+      it { should have_content(user.microposts.count) }
     end
   end
   
